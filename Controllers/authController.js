@@ -26,8 +26,10 @@ export const registerUser = async (req, res, next) => {
       .status(200)
       .json({ message: "User Registered Successfully", result: newUser });
   } catch (error) {
-    console.log(error)
-    next(error);
+    res
+      .status(200)
+      .json({ message: "Error in User Registration" });
+    next();
   }
 };
 
@@ -53,54 +55,35 @@ export const loginUser = async (req, res, next) => {
       .status(200)
       .json({ message: "User LoggedIn Successfully", rest, token });
   } catch (error) {
-    console.log(error)
-    next(error);
+    res
+      .status(200)
+      .json({ message: "Error in User Login" });
+    next();
   }
 };
 
-export const google = async (req, res, next) => {
-  const { email, name, profilePic } = req.body;
 
+
+export const registerEvent = async (req, res, next) => {
+  const {  date, userId } = req.body;
+  if ( !date || !userId ||  date ==="" ) {
+    return next(errorHandler(400, "All the Fields Are Required"));
+  }
   try {
-    const user = await User.findOne({ email });
-    if (user) {
-      const token = jwt.sign(
-        { id: user._id, isAdmin: user.isAdmin },
-        process.env.JWT_SECRET_KEY
-      );
-      console.log(user)
-      const { password: passkey, ...rest } = user._doc;
-
-      res
-        .status(200)
-        .json({ message: "User LoggedIn Successfully", rest, token });
-    } else {
-      const generatePassword =
-        Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8);
-      const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
-      const newUser = new User({
-        username:
-          name?.toLowerCase().split(" ").join("") +
-          Math.random().toString(9).slice(-4),
-        email: email,
-        password: hashedPassword,
-        profilePicture: profilePic,
-      });
-      console.log(newUser);
-      await newUser.save();
-      const token = jwt.sign(
-        { id: newUser._id, isAdmin: newUser.isAdmin },
-        process.env.JWT_SECRET_KEY
-      );
-
-      const { password: passkey, ...rest } = newUser._doc;
-
-      res
-        .status(200)
-        .json({ message: "User LoggedIn Successfully", rest, token });
+    const eventDetail = await Event.findOne({ name });
+    if (eventDetail) {
+      return next(errorHandler(400, "Event Already Exists"));
     }
-  } catch (error) {
-    next(error);
+    const newEvent = new Event({
+      date,
+      userId
+    });
+    await newEvent.save();
+    res.status(200).json({ message: "Event Created Successfully" });
+    next();
   }
-};
+  catch (error) {
+    res.status(200).json({ message: "Error in Event Creation" });
+    next();
+  }
+}

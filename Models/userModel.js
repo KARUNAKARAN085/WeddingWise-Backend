@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    profilePicture:{
+    profilePicture: {
       type: String,
       default: "https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"
     }
@@ -24,5 +24,25 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const eventSchema = new mongoose.Schema(
+  {
+    name: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    date: {
+      type: Date,
+      required: true
+    },
+    userId: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    }
+  },
+  { timestamps: true }
+
+)
+
 const User = mongoose.model("User", userSchema);
+const Event = mongoose.model("Event", eventSchema);
 export default User;

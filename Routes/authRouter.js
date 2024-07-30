@@ -1,5 +1,6 @@
 import express from "express";
-import { loginUser, registerUser,google } from "../Controllers/authController.js";
+import { loginUser, registerEvent, registerUser } from "../Controllers/authController.js";
+import { verifyToken } from "../Middleware/verifyToken.js";
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get("/", (_, res) => {
 
 router.post("/register-user", registerUser);
 router.post("/login-user", loginUser );
-router.post("/google",google);
+router.post("/register-event", registerEvent);
 
 export default router;
 
