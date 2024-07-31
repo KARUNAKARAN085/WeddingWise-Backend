@@ -40,6 +40,6 @@
   
 - Back-end repo name : https://github.com/KARUNAKARAN085/WeddingWise-Backend.git
 
-- Deployed front-end application link on Netlify:
+- Deployed front-end application link on Netlify: https://weddingwise-frontend-01.netlify.app
 
-- Deployed back-end application link on Render: 
+- Deployed back-end application link on Render: https://weddingwise-backend-uhil.onrender.com
